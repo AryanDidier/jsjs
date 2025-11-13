@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🎈 Sorpresa 🎈</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(to top right, #ff9a9e, #fad0c4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  .balloon {
+    width: 80px;
+    height: 100px;
+    background-color: #ff6666;
+    border-radius: 50% 50% 45% 55%;
+    position: absolute;
+    cursor: pointer;
+    animation: float 6s ease-in-out infinite;
+    transition: transform 0.2s;
+  }
+
+  .balloon::after {
+    content: "";
+    width: 2px;
+    height: 50px;
+    background: rgba(0,0,0,0.2);
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) }
+    50% { transform: translateY(-30px) }
+  }
+
+  .exploded {
+    animation: pop 0.3s ease-out forwards;
+  }
+
+  @keyframes pop {
+    to {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  .message {
+    position: absolute;
+    font-size: 1.2em;
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    opacity: 0;
+    animation: appear 1s forwards;
+  }
+
+  @keyframes appear {
+    to { opacity: 1; transform: translateY(-10px); }
+  }
+
+  #finalMessage {
+    display: none;
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    animation: fadeIn 2s forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+  <h2>Toca los globos 🎈</h2>
+  <div id="finalMessage"> Hola Sunmi :D </div>
+
+  <script>
+    const messages = [
+      "No supe como escribirte",
+      "asi que esta será mi excusa",
+      "hoolaa",
+      "PLOP",
+      "jsjs"
+    ];
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const body = document.body;
+    let poppedCount = 0;
+
+    messages.forEach((msg, i) => {
+      const balloon = document.createElement("div");
+      balloon.classList.add("balloon");
+      balloon.style.left = random(10, 90) + "vw";
+      balloon.style.top = random(20, 80) + "vh";
+      balloon.style.backgroundColor = `hsl(${random(0,360)},70%,60%)`;
+
+      balloon.addEventListener("click", () => {
+        if (balloon.classList.contains("exploded")) return;
+        balloon.classList.add("exploded");
+
+        const text = document.createElement("div");
+        text.classList.add("message");
+        text.textContent = msg;
+        text.style.left = balloon.style.left;
+        text.style.top = balloon.style.top;
+        body.appendChild(text);
+
+        setTimeout(() => {
+          text.remove();
+        }, 2000);
+
+        poppedCount++;
+        if (poppedCount === messages.length) {
+          setTimeout(() => {
+            document.querySelector("h2").style.display = "none";
+            document.getElementById("finalMessage").style.display = "block";
+          }, 1000);
+        }
+      });
+
+      body.appendChild(balloon);
+    });
+  </script>
+</body>
+</html>
